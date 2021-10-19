@@ -14,7 +14,8 @@ IP = '192.168.1.14'
 TOKEN = '596c7a7675566e6b43367336756c6368'
 FPS = 30
 STATUS_UPDATE_TIMER = 30 # in seconds
-TEST_REPO1 = 0
+
+
 
 main_clock = pygame.time.Clock()
 bot = miio.vacuum.Vacuum(IP, TOKEN)
