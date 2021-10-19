@@ -6,7 +6,7 @@ from pygame.constants import BUTTON_LEFT
 import requests, io
 from PIL import Image, ImageFile
 from status import Status
-from utils import scale_image
+from utils import scale_image, blit_text
 
 
 Image.LOAD_TRUNCATED_IMAGES = True
@@ -18,7 +18,6 @@ WIDTH, HEIGHT = 720, 480
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Xiaomi Vacuum Cleaner App")
 URL='http://192.168.1.31:8080/shot.jpg'
-#URL='http://192.162.9.114:8080/shot.jpg'
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -45,10 +44,6 @@ PAUSE_IMG = scale_image(pygame.image.load(os.path.join('imgs', 'pause.png')).con
 BATTERY_IMG_STATUS = scale_image(pygame.image.load(os.path.join('imgs', 'battery_level.png')).convert_alpha(), 0.5)
 
 
-
-
-
-
 def get_image() -> np.array:
     response = requests.get(URL)
     bytes_img = io.BytesIO(response.content)
@@ -72,30 +67,6 @@ def blit_status(status_list, font, color, surface, x ,y) -> None:
         surface.blit(status_img, (x, y))
         y += 30      #step in px's betwen each line
 
-
-def blit_text(text, font, color, surface, centered_x, centered_y, x = None, y = None):
-    textobj = font.render(text, 1, color)
-
-    if centered_x == True and centered_y == True:
-        textrect = textobj.get_rect()
-        textrect.topleft = (surface.get_width() / 2 - textrect.w / 2, surface.get_height() / 2 - textrect.h / 2)
-        surface.blit(textobj, textrect)
-
-    elif centered_x == True and centered_y == False:
-        textrect = textobj.get_rect()
-        textrect.topleft = (surface.get_width() / 2 - textrect.w /2, y)
-        surface.blit(textobj, textrect)
-
-    elif centered_x == False and centered_y == True:
-        textrect = textobj.get_rect()
-        textrect.topleft = (x, surface.get_height() / 2 - textrect.h / 2)
-        surface.blit(textobj, textrect)
-
-    else: 
-        textrect = textobj.get_rect()
-        textrect.topleft = (x, y)
-        surface.blit(textobj, textrect)
-    
 
 def draw_menu(WIN, manual_mode_button, go_home_button, check_status_button) -> None:
     WIN.fill(ORANGE)
@@ -145,8 +116,6 @@ def draw_status_menu(WIN, current_status, status_update_button):
     WIN.blit(ERROR_IMG, (WIDTH /2 - 100, 210))
     WIN.blit(PAUSE_IMG, (WIDTH /2 - 100, 240))
     WIN.blit(FAN_IMG, (WIDTH /2 - 100, 270))
-
-
 
 
     WIN.blit(UPDATE_IMG, (WIDTH -  status_update_button.get_width() / 2 - UPDATE_IMG.get_width() / 2, HEIGHT -  status_update_button.get_height() / 2 - UPDATE_IMG.get_height() / 2))
