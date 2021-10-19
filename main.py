@@ -9,7 +9,6 @@ from controller import Controller
 from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN, QUIT
 
 
-#IP = '192.162.9.114'
 IP = '192.168.1.14'
 TOKEN = '596c7a7675566e6b43367336756c6368'
 FPS = 30
