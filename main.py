@@ -15,7 +15,6 @@ FPS = 30
 STATUS_UPDATE_TIMER = 30 # in seconds
 
 
-
 main_clock = pygame.time.Clock()
 bot = miio.vacuum.Vacuum(IP, TOKEN)
 current_status = status.Status(bot)
