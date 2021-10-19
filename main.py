@@ -15,6 +15,8 @@ TOKEN = '596c7a7675566e6b43367336756c6368'
 FPS = 30
 STATUS_UPDATE_TIMER = 30 # in seconds
 TEST_REPO = 3
+TEST_REPO = 3
+
 
 
 main_clock = pygame.time.Clock()
