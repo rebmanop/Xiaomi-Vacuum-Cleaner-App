@@ -16,6 +16,7 @@ FPS = 30
 STATUS_UPDATE_TIMER = 30 # in seconds
 
 
+
 main_clock = pygame.time.Clock()
 bot = miio.vacuum.Vacuum(IP, TOKEN)
 current_status = status.Status(bot)
@@ -28,6 +29,7 @@ controller = Controller(bot)
 
 def main_menu():
     
+
     while True:
         mpos = pygame.mouse.get_pos()
 
@@ -144,18 +146,27 @@ def go_home():
     bot.home()
     time.sleep(1)
     go_home_button.color = ui.WHITE
+    #status_timer = 0
     frame_number = 1
     current_status.update(bot)
     while current_status.status_obj.state == "Returning home":
+        mpos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        
-        
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    break
+            
+            
         current_status.update(bot)
                     
-    
+        #if status_timer == STATUS_UPDATE_TIMER * FPS:
+           # current_status.update(bot)
+            #status_timer = 0
+
+
         if (frame_number == FPS / 5):
             go_home_button.text = "returning home.  "
 
@@ -171,14 +182,24 @@ def go_home():
             frame_number = 0
 
         main_clock.tick(FPS)
+        #status_timer += 1
         frame_number += 1
 
     go_home_button.text = "go home"
     
     
+
+
+
 def clean_mode():
     #TODO
     pass
 
         
 main_menu()
+
+
+
+
+
+
