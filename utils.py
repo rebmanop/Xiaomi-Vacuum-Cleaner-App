@@ -27,4 +27,12 @@ def blit_text(text, font, color, surface, centered_x, centered_y, x = None, y = 
         textrect = textobj.get_rect()
         textrect.topleft = (x, y)
         surface.blit(textobj, textrect)
-    
+
+
+def blit_status(status_list, font, color, surface, x , y, delta_y) -> None:
+    for each in status_list:
+        status_img = font.render(each, True, color)
+        surface.blit(status_img, (x, y))
+        y += delta_y     #step in px's betwen each line
+
+

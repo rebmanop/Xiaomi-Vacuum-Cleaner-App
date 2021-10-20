@@ -12,7 +12,7 @@ from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN, QUIT
 IP = '192.168.1.14'
 TOKEN = '596c7a7675566e6b43367336756c6368'
 FPS = 30
-STATUS_UPDATE_TIMER = 30 # in seconds
+STATUS_UPDATE_TIMER = 30  #in seconds
 
 
 main_clock = pygame.time.Clock()
@@ -21,8 +21,10 @@ current_status = status.Status(bot)
 manual_mode_button = button.Button(ui.WHITE, ui.WIDTH / 2 , 150, 250, 40, ui.BUTTON_FONT, ui.BLACK, 'manual mode', True)
 go_home_button = button.Button(ui.WHITE, ui.WIDTH / 2, 240, 250, 40, ui.BUTTON_FONT, ui.BLACK, 'go home', True)
 check_status_button = button.Button(ui.WHITE, ui.WIDTH / 2, 330, 250, 40, ui.BUTTON_FONT, ui.BLACK, 'status', True)
-status_update_button = button.Button(ui.WHITE, ui.WIDTH - 50, ui.HEIGHT - 50, 50, 50, ui.BUTTON_FONT, ui.BLACK)
+status_update_button = button.Button(ui.WHITE, ui.WIDTH - 60, 10, 50, 50, ui.BUTTON_FONT, ui.BLACK)
+find_bot_button = button.Button(ui.WHITE, ui.WIDTH - 60, 70, 50, 50, ui.BUTTON_FONT, ui.BLACK)
 controller = Controller(bot)
+
 
 
 def main_menu():
@@ -72,7 +74,7 @@ def main_menu():
                     check_status_button.color = ui.WHITE
                 
 
-        ui.draw_menu(ui.WIN, manual_mode_button, go_home_button, check_status_button)
+        ui.draw_main_menu(ui.WIN, manual_mode_button, go_home_button, check_status_button)
         main_clock.tick(FPS)
 
 
@@ -120,6 +122,7 @@ def status_menu():
                 if event.key == K_ESCAPE:
                     running = False
             
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if status_update_button.has_mouse_on_it(mpos):
                     current_status.update(bot)
@@ -130,19 +133,31 @@ def status_menu():
                     status_update_button.color = ui.GREEN
                 else:
                     status_update_button.color = ui.WHITE
+
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if find_bot_button.has_mouse_on_it(mpos):
+                    bot.find()
                     
+            if event.type == pygame.MOUSEMOTION:
+                if find_bot_button.has_mouse_on_it(mpos):
+                    find_bot_button.color = ui.GREEN
+                else:
+                    find_bot_button.color = ui.WHITE
+
+
         if status_timer == STATUS_UPDATE_TIMER * FPS:
             current_status.update(bot)
             status_timer = 0
 
-        ui.draw_status_menu(ui.WIN, current_status, status_update_button)
+        ui.draw_status_menu(ui.WIN, current_status, status_update_button, find_bot_button, STATUS_UPDATE_TIMER)
         main_clock.tick(FPS)
         status_timer += 1
 
 
 def go_home():
     bot.home()
-    time.sleep(1)
+    time.sleep(2)
     go_home_button.color = ui.WHITE
     frame_number = 1
     current_status.update(bot)
