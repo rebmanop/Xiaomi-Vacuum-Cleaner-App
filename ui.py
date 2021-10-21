@@ -2,10 +2,8 @@ import pygame
 import os
 import urllib.request as urllib
 import numpy as np
-from pygame.constants import BUTTON_LEFT
 import requests, io
 from PIL import Image, ImageFile
-from status import Status
 from utils import scale_image, blit_text, blit_status
 
 
@@ -20,9 +18,7 @@ pygame.display.set_caption("Xiaomi Vacuum Cleaner App")
 URL='http://192.168.1.31:8080/shot.jpg'
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-RED = (255, 0, 0)
 GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
 ORANGE = (255,73,0)
 MINI_FONT = pygame.font.SysFont('arial', 15)
 MANUAL_INFO_FONT = pygame.font.SysFont('arial', 20)
@@ -101,7 +97,7 @@ def draw_manual(WIN, current_status, movement_info) -> None:
     pygame.display.update()
 
 
-def draw_status_menu(WIN, current_status, status_update_button, find_bot_button, update_timer):
+def draw_settings_menu(WIN, current_status, status_update_button, find_bot_button, change_fanspeed_button, update_timer):
     status_start_y = 30
     status_delta_y = 30
     icons_text_offset = 10
@@ -112,6 +108,8 @@ def draw_status_menu(WIN, current_status, status_update_button, find_bot_button,
     blit_status(current_status.get_status_list(), STATUS_FONT, BLACK, WIN, status_start_x + STATE_IMG.get_width() + icons_text_offset, status_start_y, status_delta_y) # 10 is offset
     status_update_button.blit(WIN, outline = BLACK)
     find_bot_button.blit(WIN, outline = BLACK)
+    change_fanspeed_button.blit(WIN, outline = BLACK)
+
     WIN.blit(STATE_IMG, (status_start_x, status_start_y))
     WIN.blit(BATTERY_IMG_STATUS, (status_start_x, status_start_y + status_delta_y * 1))
     WIN.blit(ERROR_IMG, (status_start_x, status_start_y + status_delta_y * 2))

@@ -5,8 +5,8 @@ import sys
 import time
 import button
 import status
+from itertools import cycle
 from controller import Controller
-from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN, QUIT
 
 
 IP = '192.168.1.14'
@@ -20,25 +20,26 @@ bot = miio.vacuum.Vacuum(IP, TOKEN)
 current_status = status.Status(bot)
 manual_mode_button = button.Button(ui.WHITE, ui.WIDTH / 2 , 150, 250, 40, ui.BUTTON_FONT, ui.BLACK, 'manual mode', True)
 go_home_button = button.Button(ui.WHITE, ui.WIDTH / 2, 240, 250, 40, ui.BUTTON_FONT, ui.BLACK, 'go home', True)
-check_status_button = button.Button(ui.WHITE, ui.WIDTH / 2, 330, 250, 40, ui.BUTTON_FONT, ui.BLACK, 'status', True)
+check_status_button = button.Button(ui.WHITE, ui.WIDTH / 2, 330, 250, 40, ui.BUTTON_FONT, ui.BLACK, 'settings', True)
 status_update_button = button.Button(ui.WHITE, ui.WIDTH - 60, 10, 50, 50, ui.BUTTON_FONT, ui.BLACK)
 find_bot_button = button.Button(ui.WHITE, ui.WIDTH - 60, 70, 50, 50, ui.BUTTON_FONT, ui.BLACK)
+change_fanspeed_button = button.Button(ui.WHITE, ui.WIDTH/2 , ui.HEIGHT /2, 300, 50, ui.BUTTON_FONT, ui.BLACK, 'change fanspeed', True, True)
+pool = cycle([fanspeed.value for fanspeed in status.Fanspeed]) #iterates in a loop through a list of enum values
 controller = Controller(bot)
 
 
 
 def main_menu():
-    
 
     while True:
         mpos = pygame.mouse.get_pos()
 
         for event in pygame.event.get():
-            if event.type == QUIT:
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
 
@@ -48,7 +49,7 @@ def main_menu():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if check_status_button.has_mouse_on_it(mpos):
-                    status_menu()
+                    settings_menu()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if go_home_button.has_mouse_on_it(mpos):
@@ -92,8 +93,8 @@ def manual_mode():
                 bot.set_fan_speed(status.Fanspeed.Turbo.value)
                 pygame.quit()
                 sys.exit()
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     running = False
                     bot.manual_stop()
                     bot.set_fan_speed(status.Fanspeed.Turbo.value)
@@ -108,7 +109,7 @@ def manual_mode():
         status_timer += 1
 
 
-def status_menu():
+def settings_menu():
     current_status.update(bot)
     running = True 
     status_timer = 0
@@ -118,8 +119,8 @@ def status_menu():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     running = False
             
 
@@ -146,18 +147,31 @@ def status_menu():
                     find_bot_button.color = ui.WHITE
 
 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if change_fanspeed_button.has_mouse_on_it(mpos):
+                    bot.set_fan_speed(next(pool))
+                    current_status.update(bot)
+                    
+                    
+            if event.type == pygame.MOUSEMOTION:
+                if change_fanspeed_button.has_mouse_on_it(mpos):
+                    change_fanspeed_button.color = ui.GREEN
+                else:
+                    change_fanspeed_button.color = ui.WHITE
+
+
         if status_timer == STATUS_UPDATE_TIMER * FPS:
             current_status.update(bot)
             status_timer = 0
 
-        ui.draw_status_menu(ui.WIN, current_status, status_update_button, find_bot_button, STATUS_UPDATE_TIMER)
+        ui.draw_settings_menu(ui.WIN, current_status, status_update_button, find_bot_button, change_fanspeed_button, STATUS_UPDATE_TIMER)
         main_clock.tick(FPS)
         status_timer += 1
 
 
 def go_home():
     bot.home()
-    time.sleep(2)
+    time.sleep(2) #waits until bot.home() is done
     go_home_button.color = ui.WHITE
     frame_number = 1
     current_status.update(bot)
@@ -167,8 +181,8 @@ def go_home():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     break
             
             
