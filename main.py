@@ -5,12 +5,17 @@ import sys
 import time
 import button
 import status
+import configparser
 from itertools import cycle
 from controller import Controller
 
 
-IP = '192.168.1.14'
-TOKEN = '596c7a7675566e6b43367336756c6368'
+config = configparser.ConfigParser()
+config.read('config.txt')
+
+
+IP = config['DEFAULT']['IP']
+TOKEN = config['DEFAULT']['TOKEN']
 FPS = 30
 STATUS_UPDATE_TIMER = 30  #in seconds
 
@@ -26,7 +31,6 @@ find_bot_button = button.Button(ui.WHITE, ui.WIDTH - 60, 70, 50, 50, ui.BUTTON_F
 change_fanspeed_button = button.Button(ui.WHITE, ui.WIDTH/2 , ui.HEIGHT /2, 300, 50, ui.BUTTON_FONT, ui.BLACK, 'change fanspeed', True, True)
 pool = cycle([fanspeed.value for fanspeed in status.Fanspeed]) #iterates in a loop through a list of enum values
 controller = Controller(bot)
-
 
 
 def main_menu():

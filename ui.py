@@ -2,6 +2,7 @@ import pygame
 import os
 import urllib.request as urllib
 import numpy as np
+import configparser
 import requests, io
 from PIL import Image, ImageFile
 from utils import scale_image, blit_text, blit_status
@@ -12,10 +13,14 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 pygame.font.init()
 
 
+config = configparser.ConfigParser()
+config.read('config.txt')
+
+
 WIDTH, HEIGHT = 720, 480
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Xiaomi Vacuum Cleaner App")
-URL='http://192.168.1.31:8080/shot.jpg'
+URL = config['DEFAULT']['VIDEO_FEED_URL']
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
