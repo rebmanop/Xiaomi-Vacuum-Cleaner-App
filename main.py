@@ -6,6 +6,8 @@ import time
 import button
 import status
 import configparser
+import threading
+import multiprocessing
 from itertools import cycle
 from controller import Controller
 
@@ -20,8 +22,8 @@ FPS = 30
 STATUS_UPDATE_TIMER = 30  #in seconds
 
 
-main_clock = pygame.time.Clock()
 bot = miio.vacuum.Vacuum(IP, TOKEN)
+main_clock = pygame.time.Clock()
 current_status = status.Status(bot)
 manual_mode_button = button.Button(ui.WHITE, ui.WIDTH / 2 , 150, 250, 40, ui.BUTTON_FONT, ui.BLACK, 'manual mode', True)
 go_home_button = button.Button(ui.WHITE, ui.WIDTH / 2, 240, 250, 40, ui.BUTTON_FONT, ui.BLACK, 'go home', True)
@@ -172,6 +174,7 @@ def settings_menu():
         main_clock.tick(FPS)
         status_timer += 1
 
+       
 
 def go_home():
     bot.home()
@@ -191,9 +194,10 @@ def go_home():
             
             
         current_status.update(bot)
-                    
 
+        
         if (frame_number == FPS / 5):
+
             go_home_button.text = "returning home.  "
 
         elif (frame_number == FPS / 2):
@@ -201,6 +205,7 @@ def go_home():
         
         elif (frame_number == FPS / 1.2): 
             go_home_button.text = "returning home..."
+        
 
         ui.draw_go_home_menu(ui.WIN, go_home_button)
         
@@ -209,10 +214,10 @@ def go_home():
 
         main_clock.tick(FPS)
         frame_number += 1
-
+    
     go_home_button.text = "go home"
-    
-    
+
+
 def clean_mode():
     #TODO
     pass

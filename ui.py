@@ -4,6 +4,7 @@ import urllib.request as urllib
 import numpy as np
 import configparser
 import requests, io
+import time
 from PIL import Image, ImageFile
 from utils import scale_image, blit_text, blit_status
 
@@ -19,8 +20,8 @@ config.read('config.txt')
 
 WIDTH, HEIGHT = 720, 480
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Xiaomi Vacuum Cleaner App")
 URL = config['DEFAULT']['VIDEO_FEED_URL']
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
@@ -36,6 +37,7 @@ DOWN_ARROW = pygame.transform.scale(pygame.image.load(os.path.join('imgs', 'down
 LEFT_ARROW = pygame.transform.scale(pygame.image.load(os.path.join('imgs', 'left_arrow.png')).convert_alpha(), (51, 51))
 RIGHT_ARROW = pygame.transform.scale(pygame.image.load(os.path.join('imgs', 'right_arrow.png')).convert_alpha(), (51, 51))
 BATTERY_IMG = pygame.image.load(os.path.join('imgs', 'battery_level.png')).convert_alpha()
+WINDOW_ICON = pygame.image.load(os.path.join('imgs', 'window_icon.png')).convert_alpha()
 FAN_IMG = scale_image(pygame.image.load(os.path.join('imgs', 'ac.png')).convert_alpha(), 0.05)
 UPDATE_IMG = scale_image(pygame.image.load(os.path.join('imgs', 'refresh.png')).convert_alpha(), 0.05)
 STATE_IMG = scale_image(pygame.image.load(os.path.join('imgs', 'state.png')).convert_alpha(), 0.05)
@@ -43,8 +45,8 @@ ERROR_IMG = scale_image(pygame.image.load(os.path.join('imgs', 'error.png')).con
 PAUSE_IMG = scale_image(pygame.image.load(os.path.join('imgs', 'pause.png')).convert_alpha(), 0.05)
 BATTERY_IMG_STATUS = scale_image(pygame.image.load(os.path.join('imgs', 'battery_level_stat.png')).convert_alpha(), 0.05)
 MAGNIFYING_GLASS_IMG = scale_image(pygame.image.load(os.path.join('imgs', 'magnifying_glass.png')).convert_alpha(), 0.05)
-
-
+pygame.display.set_icon(WINDOW_ICON)
+pygame.display.set_caption("Xiaomi Vacuum Cleaner App")
 
 def get_image() -> np.array:
     response = requests.get(URL)
@@ -131,5 +133,6 @@ def draw_settings_menu(WIN, current_status, status_update_button, find_bot_butto
 
 def draw_go_home_menu(WIN, go_home_button):
     WIN.fill(ORANGE)
+
     go_home_button.blit(WIN, outline = BLACK)
     pygame.display.update()
