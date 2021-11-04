@@ -4,6 +4,7 @@ Windows application for Xiaomi vacuum robots, that allows you to use your robot 
  - **pygame**
  - **miio**
  - **configparser**
- -  **pillow**
- -  **numpy**
+ - **pillow**
+ - **numpy**
+ - **requests**
 # How to use
