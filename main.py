@@ -6,22 +6,22 @@ import time
 import button
 import status
 import configparser
-import threading
-import multiprocessing
 from itertools import cycle
 from controller import Controller
 
 
+#GET CONFIG
 config = configparser.ConfigParser()
 config.read('config.txt')
-
-
 IP = config['DEFAULT']['IP']
 TOKEN = config['DEFAULT']['TOKEN']
+
+
 FPS = 30
 STATUS_UPDATE_TIMER = 30  #in seconds
 
 
+#OBJECT INITIALIZATION
 bot = miio.vacuum.Vacuum(IP, TOKEN)
 main_clock = pygame.time.Clock()
 current_status = status.Status(bot)
@@ -31,7 +31,7 @@ check_status_button = button.Button(ui.WHITE, ui.WIDTH / 2, 330, 250, 40, ui.BUT
 status_update_button = button.Button(ui.WHITE, ui.WIDTH - 60, 10, 50, 50, ui.BUTTON_FONT, ui.BLACK)
 find_bot_button = button.Button(ui.WHITE, ui.WIDTH - 60, 70, 50, 50, ui.BUTTON_FONT, ui.BLACK)
 change_fanspeed_button = button.Button(ui.WHITE, ui.WIDTH/2 , ui.HEIGHT /2, 300, 50, ui.BUTTON_FONT, ui.BLACK, 'change fanspeed', True, True)
-pool = cycle([fanspeed.value for fanspeed in status.Fanspeed]) #iterates in a loop through a list of enum values
+pool = cycle([fanspeed.value for fanspeed in status.FanspeedV2]) #loops through a list of enum values
 controller = Controller(bot)
 
 
@@ -81,12 +81,12 @@ def main_menu():
                     check_status_button.color = ui.WHITE
                 
 
-        ui.draw_main_menu(ui.WIN, manual_mode_button, go_home_button, check_status_button)
+        ui.draw_main_menu(ui.WIN, manual_mode_button, go_home_button, check_status_button, current_status, IP, TOKEN)
         main_clock.tick(FPS)
 
 
 def manual_mode():
-    bot.set_fan_speed(status.Fanspeed.Gentle.value)
+    bot.set_fan_speed(status.FanspeedV2.Gentle.value)
     bot.manual_start()
     current_status.update(bot)
     status_timer = 0
@@ -96,14 +96,14 @@ def manual_mode():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 bot.manual_stop()
-                bot.set_fan_speed(status.Fanspeed.Turbo.value)
+                bot.set_fan_speed(status.FanspeedV2.Turbo.value)
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
                     bot.manual_stop()
-                    bot.set_fan_speed(status.Fanspeed.Turbo.value)
+                    bot.set_fan_speed(status.FanspeedV2.Turbo.value)
 
         if status_timer == STATUS_UPDATE_TIMER * FPS:
             current_status.update(bot)
@@ -177,50 +177,57 @@ def settings_menu():
        
 
 def go_home():
-    bot.home()
-    time.sleep(2) #waits until bot.home() is done
-    go_home_button.color = ui.WHITE
-    frame_number = 1
     current_status.update(bot)
-    while current_status.status_obj.state == "Returning home":
-        mpos = pygame.mouse.get_pos()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    break
-            
-            
+
+    if current_status.status_obj.state == "Charging":
+        frame_number = 1
+        go_home_button.color = ui.WHITE
+        go_home_button.text = "already home"
+        while frame_number <= FPS:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit() 
+                
+            ui.draw_go_home_menu(ui.WIN, go_home_button)
+            main_clock.tick(FPS)
+            frame_number += 1    
+    else:
+        bot.home()
+        time.sleep(2) #waits until bot.home() is done
+        go_home_button.color = ui.WHITE
+        frame_number = 1
         current_status.update(bot)
+        while current_status.status_obj.state == "Returning home":
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
-        
-        if (frame_number == FPS / 5):
 
-            go_home_button.text = "returning home.  "
+            current_status.update(bot)
 
-        elif (frame_number == FPS / 2):
-            go_home_button.text = "returning home.. "
-        
-        elif (frame_number == FPS / 1.2): 
-            go_home_button.text = "returning home..."
-        
+            
+            if (frame_number == FPS / 5):
 
-        ui.draw_go_home_menu(ui.WIN, go_home_button)
-        
-        if frame_number >= FPS:
-            frame_number = 0
+                go_home_button.text = "returning home.  "
 
-        main_clock.tick(FPS)
-        frame_number += 1
+            elif (frame_number == FPS / 2):
+                go_home_button.text = "returning home.. "
+            
+            elif (frame_number == FPS / 1.2): 
+                go_home_button.text = "returning home..."
+            
+
+            ui.draw_go_home_menu(ui.WIN, go_home_button)
+            
+            if frame_number >= FPS:
+                frame_number = 0
+
+            main_clock.tick(FPS)
+            frame_number += 1
     
     go_home_button.text = "go home"
-
-
-def clean_mode():
-    #TODO
-    pass
 
 
 if __name__ == '__main__':

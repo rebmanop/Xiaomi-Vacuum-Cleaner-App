@@ -1,10 +1,9 @@
 import pygame
 import os
-import urllib.request as urllib
 import numpy as np
 import configparser
-import requests, io
-import time
+import requests
+import io
 from PIL import Image, ImageFile
 from utils import scale_image, blit_text, blit_status
 
@@ -30,6 +29,7 @@ MINI_FONT = pygame.font.SysFont('arial', 15)
 MANUAL_INFO_FONT = pygame.font.SysFont('arial', 20)
 BUTTON_FONT = pygame.font.SysFont('arial', 22)
 STATUS_FONT = pygame.font.SysFont('arial', 22)
+TITLE_FONT = pygame.font.SysFont('arial', 35)
 TITLE_IMG = pygame.transform.scale(pygame.image.load(os.path.join('imgs', 'banner_main_menu.png')).convert_alpha(), (609, 103))
 XIAOMI_LOGO = pygame.transform.scale(pygame.image.load(os.path.join('imgs', 'xiaomi_3.png')).convert_alpha(), (35, 35))
 UP_ARROW = pygame.transform.scale(pygame.image.load(os.path.join('imgs', 'up_arrow.png')).convert_alpha(), (51, 51))
@@ -45,8 +45,9 @@ ERROR_IMG = scale_image(pygame.image.load(os.path.join('imgs', 'error.png')).con
 PAUSE_IMG = scale_image(pygame.image.load(os.path.join('imgs', 'pause.png')).convert_alpha(), 0.05)
 BATTERY_IMG_STATUS = scale_image(pygame.image.load(os.path.join('imgs', 'battery_level_stat.png')).convert_alpha(), 0.05)
 MAGNIFYING_GLASS_IMG = scale_image(pygame.image.load(os.path.join('imgs', 'magnifying_glass.png')).convert_alpha(), 0.05)
-pygame.display.set_icon(WINDOW_ICON)
+pygame.display.set_icon(XIAOMI_LOGO)
 pygame.display.set_caption("Xiaomi Vacuum Cleaner App")
+
 
 def get_image() -> np.array:
     response = requests.get(URL)
@@ -77,12 +78,13 @@ def blit_direction(rot_info, vel_info):
         WIN.blit(RIGHT_ARROW, (RIGHT_ARROW.get_width() * 2, WIN.get_height() - RIGHT_ARROW.get_height()))
 
 
-def draw_main_menu(WIN, manual_mode_button, go_home_button, check_status_button) -> None:
+def draw_main_menu(WIN, manual_mode_button, go_home_button, check_status_button, current_status, IP, TOKEN) -> None:
     WIN.fill(ORANGE)
-    WIN.blit(TITLE_IMG, (WIN.get_width() / 2 - TITLE_IMG.get_width() / 2, 20))
+    #WIN.blit(TITLE_IMG, (WIN.get_width() / 2 - TITLE_IMG.get_width() / 2, 20))
     WIN.blit(XIAOMI_LOGO, (10, WIN.get_height() - XIAOMI_LOGO.get_height()))
-
-    blit_text("Created by beenin", MINI_FONT, BLACK, WIN, False, False, WIN.get_width() - 105, WIN.get_height() - 20)
+    blit_text(f"model: {current_status.model}", TITLE_FONT, BLACK, WIN, True, False, WIN.get_width() / 2, 20)
+    blit_text(f"ip: {IP}", TITLE_FONT, BLACK, WIN, True, False, WIN.get_width() / 2, 60)
+    blit_text("Created by K1R1LLER", MINI_FONT, BLACK, WIN, False, False, WIN.get_width() - 130, WIN.get_height() - 20)
     manual_mode_button.blit(WIN, outline = BLACK)
     go_home_button.blit(WIN, outline = BLACK)
     check_status_button.blit(WIN, outline = BLACK)

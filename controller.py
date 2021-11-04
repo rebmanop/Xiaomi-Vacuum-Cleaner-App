@@ -14,7 +14,7 @@ class Controller:
         self.vel_delta = 0.1
         self.vel_min = Vacuum.MANUAL_VELOCITY_MIN
         self.vel_max = Vacuum.MANUAL_VELOCITY_MAX
-        self.dur = 500 #0.15 of a second 
+        self.dur = 500 #0.5 of a second 
         pygame.joystick.init()
         if pygame.joystick.get_count() != 0:
             self.joystick_is_connected = True
@@ -41,7 +41,7 @@ class Controller:
         self.vel = 0
         self.rot = 0
         
-        if self.joystick_is_connected == True:
+        if self.joystick_is_connected:
             if self.joystick.get_axis(2) != 0:
                 self.rot = -self.scale_joystick_values(self.joystick.get_axis(2), -1, 1, -90, 90)
                 if abs(self.rot) < 8:
@@ -57,11 +57,11 @@ class Controller:
 
         else:   
             if keys_pressed[pygame.K_w]:
-                self.vel = min(self.vel + self.vel_delta, self.vel_max)
+                self.vel = self.vel_delta
                 self.bot.manual_control(rotation=self.rot, velocity=self.vel, duration=self.dur)
 
             elif keys_pressed[pygame.K_s]:
-                self.vel = max(self.vel - self.vel_delta, self.vel_min)
+                self.vel = -self.vel_delta
                 self.bot.manual_control(rotation=self.rot, velocity=self.vel, duration=self.dur)
 
 
@@ -75,11 +75,11 @@ class Controller:
 
 
             if keys_pressed[pygame.K_a]:
-                self.rot = min(self.rot + self.rot_delta, self.rot_max)
+                self.rot = self.rot_delta
                 self.bot.manual_control(rotation=self.rot, velocity=self.vel, duration=self.dur)
             
             elif keys_pressed[pygame.K_d]:
-                self.rot = max(self.rot - self.rot_delta, self.rot_min)
+                self.rot = -self.rot_delta
                 self.bot.manual_control(rotation=self.rot, velocity=self.vel, duration=self.dur)
 
 
@@ -92,5 +92,5 @@ class Controller:
                 self.bot.manual_control(rotation=self.rot, velocity=self.vel, duration=self.dur)
 
         
-    def info(self) -> tuple:
+    def info(self):
         return self.rot, self.vel
