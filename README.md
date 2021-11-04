@@ -3,7 +3,8 @@ Windows application for Xiaomi vacuum robots, that allows you to use your robot 
 # Description
 
 # Dependencies
- 1) pygame
- 2) miio
- 3) configparser
- 
+ - **pygame**
+ - **miio**
+ - **configparser**
+ -  **pillow**
+ -  **numpy**
