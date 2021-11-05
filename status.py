@@ -1,7 +1,7 @@
 from miio.vacuum import FanspeedV2
 
 class Status: 
-    
+
     def __init__(self, bot) -> None:
         self.status_obj = None
         self.got_error = "Unknown"
@@ -30,36 +30,28 @@ class Status:
     def parse_status(self):
         if self.status_obj.fanspeed == FanspeedV2.Silent.value:
             self.fanspeed = "Silent"
-            
         elif self.status_obj.fanspeed == FanspeedV2.Standard.value:
             self.fanspeed = "Standart"
-        
         elif self.status_obj.fanspeed == FanspeedV2.Medium.value:
             self.fanspeed = "Medium"
-        
         elif self.status_obj.fanspeed == FanspeedV2.Turbo.value:
             self.fanspeed = "Turbo"
-        
         elif self.status_obj.fanspeed == FanspeedV2.Gentle.value:
             self.fanspeed = "Gentle"
-        
         elif self.status_obj.fanspeed == FanspeedV2.Auto.value:
             self.fanspeed = "Auto"
-        
         else: 
             self.fanspeed = "Unknown"
         
         
         if self.status_obj.got_error == False:
             self.got_error = "No errors"
-
         else:
             self.got_error = f"Error code: {self.status_obj.error_code}"
 
 
         if self.status_obj.is_paused == True:
             self.is_paused = "Is paused"
-
         else: 
             self.is_paused = "Is not paused"
             
