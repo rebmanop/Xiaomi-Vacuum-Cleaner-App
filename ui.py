@@ -22,22 +22,24 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 URL = config['DEFAULT']['VIDEO_FEED_URL']
 
 WHITE = (255, 255, 255)
+RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 ORANGE = (255,73,0)
-MINI_FONT = pygame.font.SysFont('arial', 15)
-MANUAL_INFO_FONT = pygame.font.SysFont('arial', 20)
-BUTTON_FONT = pygame.font.SysFont('arial', 22)
-STATUS_FONT = pygame.font.SysFont('arial', 22)
-TITLE_FONT = pygame.font.SysFont('arial', 35)
-TITLE_IMG = pygame.transform.scale(pygame.image.load(os.path.join('imgs', 'banner_main_menu.png')).convert_alpha(), (609, 103))
+GRAY  = (36, 35, 34)
+BLUE = (0, 0, 255)
+MINI_FONT = pygame.font.SysFont('impact', 15)
+MANUAL_INFO_FONT = pygame.font.SysFont('lucidaconsole', 20)
+BUTTON_FONT = pygame.font.SysFont('lucidaconsole', 22)
+STATUS_FONT = pygame.font.SysFont('lucidaconsole', 22)
+TITLE_FONT = pygame.font.SysFont('lucidaconsole', 30)
+
 XIAOMI_LOGO = pygame.transform.scale(pygame.image.load(os.path.join('imgs', 'xiaomi_3.png')).convert_alpha(), (35, 35))
 UP_ARROW = pygame.transform.scale(pygame.image.load(os.path.join('imgs', 'up_arrow.png')).convert_alpha(), (51, 51))
 DOWN_ARROW = pygame.transform.scale(pygame.image.load(os.path.join('imgs', 'down_arrow.png')).convert_alpha(), (51, 51))
 LEFT_ARROW = pygame.transform.scale(pygame.image.load(os.path.join('imgs', 'left_arrow.png')).convert_alpha(), (51, 51))
 RIGHT_ARROW = pygame.transform.scale(pygame.image.load(os.path.join('imgs', 'right_arrow.png')).convert_alpha(), (51, 51))
 BATTERY_IMG = pygame.image.load(os.path.join('imgs', 'battery_level.png')).convert_alpha()
-WINDOW_ICON = pygame.image.load(os.path.join('imgs', 'window_icon.png')).convert_alpha()
 FAN_IMG = scale_image(pygame.image.load(os.path.join('imgs', 'ac.png')).convert_alpha(), 0.05)
 UPDATE_IMG = scale_image(pygame.image.load(os.path.join('imgs', 'refresh.png')).convert_alpha(), 0.05)
 STATE_IMG = scale_image(pygame.image.load(os.path.join('imgs', 'state.png')).convert_alpha(), 0.05)
@@ -78,33 +80,50 @@ def blit_direction(rot_info, vel_info):
         WIN.blit(RIGHT_ARROW, (RIGHT_ARROW.get_width() * 2, WIN.get_height() - RIGHT_ARROW.get_height()))
 
 
-def draw_main_menu(WIN, manual_mode_button, go_home_button, check_status_button, current_status, IP, TOKEN) -> None:
-    WIN.fill(ORANGE)
-    #WIN.blit(TITLE_IMG, (WIN.get_width() / 2 - TITLE_IMG.get_width() / 2, 20))
-    WIN.blit(XIAOMI_LOGO, (10, WIN.get_height() - XIAOMI_LOGO.get_height()))
-    blit_text(f"model: {current_status.model}", TITLE_FONT, BLACK, WIN, True, False, WIN.get_width() / 2, 20)
-    blit_text(f"ip: {IP}", TITLE_FONT, BLACK, WIN, True, False, WIN.get_width() / 2, 60)
-    blit_text("Created by K1R1LLER", MINI_FONT, BLACK, WIN, False, False, WIN.get_width() - 130, WIN.get_height() - 20)
-    manual_mode_button.blit(WIN, outline = BLACK)
-    go_home_button.blit(WIN, outline = BLACK)
-    check_status_button.blit(WIN, outline = BLACK)
+def draw_main_menu(WIN, manual_mode_button, go_home_button, check_status_button, current_status) -> None:
+    if current_status.connected:
+        WIN.fill(ORANGE)
+        WIN.blit(XIAOMI_LOGO, (10, WIN.get_height() - XIAOMI_LOGO.get_height()))
+        blit_text("Connection with the vacuum established.", STATUS_FONT, BLACK, WIN, True, False, WIN.get_width() / 2, 20)
+        blit_text(f"model:{current_status.model}", STATUS_FONT, BLACK, WIN, True, False, WIN.get_width() / 2, 60)
+        blit_text(f"ip:{current_status.ip}", STATUS_FONT, BLACK, WIN, True, False, WIN.get_width() / 2, 100)
+        blit_text("Created by K1R1LLER", MINI_FONT, BLACK, WIN, False, False, WIN.get_width() - 130, WIN.get_height() - 20)
+        manual_mode_button.blit(WIN, outline = BLACK)
+        go_home_button.blit(WIN, outline = BLACK)
+        check_status_button.blit(WIN, outline = BLACK)
+        pygame.display.update()
+    else:
+        WIN.fill(ORANGE)
+        WIN.blit(XIAOMI_LOGO, (10, WIN.get_height() - XIAOMI_LOGO.get_height()))
+        blit_text("Can't connect to the vacuum, check config file", STATUS_FONT, BLACK, WIN, True, False, WIN.get_width() / 2, 20)
+        blit_text(f"model:{current_status.model}", STATUS_FONT, BLACK, WIN, True, False, WIN.get_width() / 2, 60)
+        blit_text(f"ip:{current_status.ip}", STATUS_FONT, BLACK, WIN, True, False, WIN.get_width() / 2, 100)
+        blit_text("Created by K1R1LLER", MINI_FONT, BLACK, WIN, False, False, WIN.get_width() - 130, WIN.get_height() - 20)
+        manual_mode_button.blit(WIN, outline = BLACK)
+        go_home_button.blit(WIN, outline = BLACK)
+        check_status_button.blit(WIN, outline = BLACK)
+        pygame.display.update()
 
-    pygame.display.update()
 
 
-def draw_manual(WIN, current_status, movement_info) -> None:
-    video_feed = transform_image()  
-    rot_info, vel_info = movement_info
+def draw_manual(WIN, current_status, video_feed_connected, manual_mode_button, movement_info = None) -> None:
     
-    WIN.fill(BLACK)
-    WIN.blit(video_feed, (0,0))
-    blit_direction(rot_info, vel_info)
-    blit_text(f"Rotation: {rot_info:.1f}    Velocity: {vel_info:.2f}", MANUAL_INFO_FONT, WHITE, WIN, False, False, WIN.get_width() / 1.5, WIN.get_height() - 30)
-    WIN.blit(BATTERY_IMG, (WIDTH - BATTERY_IMG.get_width(), -10))
-    blit_text(f"{(current_status.get_status_obj()).battery}%", MINI_FONT, WHITE, WIN, False, False, WIDTH - BATTERY_IMG.get_width()  / 2 - 15, -10 + BATTERY_IMG.get_height() / 2.7)
+    if video_feed_connected:
+        video_feed = transform_image()  
+        rot_info, vel_info = movement_info
+        
+        WIN.fill(BLACK)
+        WIN.blit(video_feed, (0,0))
+        blit_direction(rot_info, vel_info)
+        blit_text(f"Rotation:{rot_info:.1f} Velocity:{vel_info:.2f}", MANUAL_INFO_FONT, ORANGE, WIN, False, False, WIN.get_width() / 2, WIN.get_height() - 30)
+        WIN.blit(BATTERY_IMG, (WIDTH - BATTERY_IMG.get_width(), -10))
+        blit_text(f"{(current_status.get_status_obj()).battery}%", MANUAL_INFO_FONT, ORANGE, WIN, False, False, WIDTH - BATTERY_IMG.get_width()  / 2 - 15, -10 + BATTERY_IMG.get_height() / 2.7)
+        pygame.display.update()
 
-    pygame.display.update()
-
+    else:
+        WIN.fill(ORANGE)
+        manual_mode_button.blit(WIN, outline = BLACK)
+        pygame.display.update()
 
 def draw_settings_menu(WIN, current_status, status_update_button, find_bot_button, change_fanspeed_button, update_timer):
     status_start_y = 30

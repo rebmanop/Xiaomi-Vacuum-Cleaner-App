@@ -1,4 +1,5 @@
 from miio.vacuum import FanspeedV2
+import miio
 
 class Status: 
 
@@ -11,14 +12,32 @@ class Status:
         self.state = "Unknown"
         self.battery_level = "Unknown"
         self.error_code = "Unknown"
-        self.info = bot.info()
-        self.update(bot) 
-        self.model = self.get_model()
+        try:
+            self.info = bot.info()
+            self.model = self.get_model()
+            self.ip = self.get_ip()
+        except: 
+            self.model = "Unknown"
+            self.ip = "0.0.0.0"
+        
 
-    
+        try:
+         self.update(bot)
+         self.connected = True
+
+        except miio.DeviceException as e:
+            print(f"Can't connect to the robot, check config.txt")
+            self.connected = False  
+            
+          
+
     def get_model(self):
         model =  self.info.model
         return model
+
+    def get_ip(self):
+        ip =  self.info.ip_address
+        return ip
         
 
     def update(self, bot):
