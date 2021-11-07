@@ -14,7 +14,7 @@ from controller import Controller
 
 #GET CONFIG
 config = configparser.ConfigParser()
-config.read('config_test.txt')
+config.read('config.txt')
 IP = config['DEFAULT']['IP']
 TOKEN = config['DEFAULT']['TOKEN']
 
