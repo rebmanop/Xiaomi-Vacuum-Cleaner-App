@@ -14,7 +14,7 @@ pygame.font.init()
 
 
 config = configparser.ConfigParser()
-config.read('config_test.txt')
+config.read('config.txt')
 
 
 WIDTH, HEIGHT = 720, 480
