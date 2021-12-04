@@ -14,14 +14,13 @@ from controller import Controller
 
 #GET CONFIG
 config = configparser.ConfigParser()
-config.read('config.txt')
+config.read('config_test.txt')
 IP = config['DEFAULT']['IP']
 TOKEN = config['DEFAULT']['TOKEN']
 
 
 FPS = 30
 STATUS_UPDATE_TIMER = 30  #in seconds
-
 
 
 #OBJECT INITIALIZATION

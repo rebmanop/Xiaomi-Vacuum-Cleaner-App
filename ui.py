@@ -14,7 +14,7 @@ pygame.font.init()
 
 
 config = configparser.ConfigParser()
-config.read('config.txt')
+config.read('config_test.txt')
 
 
 WIDTH, HEIGHT = 720, 480
@@ -117,7 +117,7 @@ def draw_manual(WIN, current_status, video_feed_connected, manual_mode_button, m
         blit_direction(rot_info, vel_info)
         blit_text(f"Rotation:{rot_info:.1f} Velocity:{vel_info:.2f}", MANUAL_INFO_FONT, ORANGE, WIN, False, False, WIN.get_width() / 2, WIN.get_height() - 30)
         WIN.blit(BATTERY_IMG, (WIDTH - BATTERY_IMG.get_width(), -10))
-        blit_text(f"{(current_status.get_status_obj()).battery}%", MANUAL_INFO_FONT, ORANGE, WIN, False, False, WIDTH - BATTERY_IMG.get_width()  / 2 - 15, -10 + BATTERY_IMG.get_height() / 2.7)
+        blit_text(f"{(current_status.get_status_obj()).battery}%", MANUAL_INFO_FONT, ORANGE, WIN, False, False, WIDTH - BATTERY_IMG.get_width()  / 2 - 20, -10 + BATTERY_IMG.get_height() / 2.7)
         pygame.display.update()
 
     else:

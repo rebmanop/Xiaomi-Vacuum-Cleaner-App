@@ -89,7 +89,7 @@ class Status:
         self.status_list.append(self.fanspeed)
 
 
-    def get_status_list(self) -> list[str]:
+    def get_status_list(self):
         return self.status_list
 
 
