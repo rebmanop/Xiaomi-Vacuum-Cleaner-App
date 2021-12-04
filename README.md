@@ -28,5 +28,5 @@ Python **requests** image from web server, which runs on a phone. This is done u
  5) Fill in the robot's network infomation and video feed url in the **config.txt** file.
  6) Run main.py from **Xiaomi-Vacuum-Cleaner-App** folder.
  
- # How to use
+ # Demo
 ![This is a gif](/imgs/Screenshots/demo.gif)
