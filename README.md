@@ -3,7 +3,7 @@ This application should not be taken too seriously, it was built around one stup
 # How it works
 Python **requests** image from web server, which runs on a phone. This is done using **IP webcam** Android app. Then **pygame** displays this image on the screen. To control robot movement and to get robot related information **python-miio** module is beeing used.
 # Screenshots
-![This is an image](https://Xiaomi-Vacuum-Cleaner-App/imgs/Screenshots/connected_main.png)
+![This is an image](https://github.com/K1R1LLER/Xiaomi-Vacuum-Cleaner-App/imgs/Screenshots/connected_main.png)
 # Dependencies
  - **pygame**
  - **miio** 
