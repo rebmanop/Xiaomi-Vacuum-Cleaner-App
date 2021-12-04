@@ -3,7 +3,7 @@ This application should not be taken too seriously, it was built around one stup
 # How it works
 Python **requests** image from web server, which runs on a phone. This is done using **IP webcam** Android app. Then **pygame** displays this image on the screen. To control robot movement and to get robot related information **python-miio** module is beeing used.
 # Screenshots
-
+![This is an image](https://myoctocat.com/assets/images/base-octocat.svg)
 # Dependencies
  - **pygame**
  - **miio** 
