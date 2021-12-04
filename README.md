@@ -3,7 +3,10 @@ This application should not be taken too seriously, it was built around one stup
 # How it works
 Python **requests** image from web server, which runs on a phone. This is done using **IP webcam** Android app. Then **pygame** displays this image on the screen. To control robot movement and to get robot related information **python-miio** module is beeing used.
 # Screenshots
-
+![This is an image](/imgs/Screenshots/connected_main.png)
+![This is an image](/imgs/Screenshots/manual_mode3.png)
+![This is an image](/imgs/Screenshots/settings.png)
+![This is an image](/imgs/Screenshots/vacuum_not_connected.png)
 # Dependencies
  - **pygame**
  - **miio** 
