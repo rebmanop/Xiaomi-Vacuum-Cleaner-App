@@ -1,5 +1,5 @@
 # Description
-This application should not be taken too seriously. It was built around one stupid idea, which is - riding around your apartment on a robot vacuum cleaner from anywhere in the world. It also has some basic "robot vacuum app" functionality. Robot vacuum cleaners usually don't have a forward pointing camera on board, so I had to get creative... 
+This application should not be taken too seriously. It was built around one stupid idea, which is - riding around your apartment from anywhere in the world on a robot vacuum cleaner, it has some basic "robot vacuum app" functionality as well. Robot vacuum cleaners usually don't have a forward pointing camera on board, so I had to get creative... 
 ###### 
 ![This is an image](/imgs/Screenshots/photo.png)
 # How it works
